@@ -8,19 +8,52 @@
 </tables>
 </cffunction>	
 	
-<cffunction name="convertURL" access="public" returntype="string" output="no"> 
+<cffunction name="convertURL" access="public"  returntype="string" output="no"> 
 	<cfargument name="URL" displayName="URL" type="string" required="true" />
 		
 		<cfset var ret="">
+		<cfset var sRefererDomain = "">
 		<cfset var referer = "">
-		<cfset var occurrences = 0>
-		<cfset var lTLD = "com,org,net,int,edu,gov,mil"><!--- Not an all inclusive list now that there are hundreds of TLD's --->
-		 		
-		<cfif NOT #Find('://', arguments.URL)#>
+		<cfset var javaURL = "">
+		
+		<cfif NOT Find('://', arguments.URL)>
 			<!--- append with http so the Java can parse it--->
 			<cfset referer = 'http://'& arguments.URL>
 		<cfelse>
 			<cfset referer = arguments.URL>
+		</cfif>
+
+		<cfset sRefererDomain = validateDomain(DomainName=arguments.URL)> 
+		<!--- look in component to see if it exists in a table--->
+		<cfset qGetRecords = getRecord(DomainName=sRefererDomain.DomainName)>
+		<cfif qGetRecords.recordCount GT 0>
+			<!--- Create a Java URL object based on our referer URL. --->
+			<cfset javaUrl = createObject( "java", "java.net.URL" ).init(
+			    javaCast( "string", referer )
+			    ) />
+			<cfset ret = JavaURL.getFile()>
+		<cfelse>
+			<cfset ret = referer>
+		</cfif>		
+		
+	<cfreturn ret>
+	
+</cffunction>
+
+<cffunction name="validateDomain" access="public" returntype="struct" output="no">
+	<cfset var referer = "">
+	<cfset var occurrences = 0>
+	<cfset var sRefererDomain = "">
+	<cfset var javaURL = "">
+	<cfset var lTLD = "com,org,net,int,edu,gov,mil"><!--- Not an all inclusive list now that there are hundreds of TLD's --->
+		 
+	<cfif StructKeyExists(Arguments,"DomainName")>
+		
+		<cfif NOT Find('://', arguments.DomainName)>
+			<!--- append with http so the Java can parse it--->
+			<cfset referer = 'http://'& arguments.DomainName>
+		<cfelse>
+			<cfset referer = arguments.DomainName>
 		</cfif>
 		
 		<!--- Thank you Ben Nadel - http://www.bennadel.com/blog/1692-ask-ben-getting-the-domain-name-from-the-referer-url.htm --->
@@ -59,25 +92,10 @@
 			</cfif>
 			
 		</cfif>
-		
-		<!--- look in component to see if it exists in a table--->
-		<cfset qGetRecords = getRecord(DomainName=sRefererDomain)>
-		<cfif qGetRecords.recordCount GT 0>
-			<cfset ret = JavaURL.getFile()>
-		<cfelse>
-			<cfset ret = referer>
-		</cfif>		
-		
-	<cfreturn ret>
-	
-</cffunction>
-
-<cffunction name="validateDomain" access="public" returntype="struct" output="no">
-	
-	<cfif StructKeyExists(Arguments,"URL")>
-		<cfset Arguments.URL = convertURL(Arguments.URL)>
 	</cfif>
+	<cfset Arguments.DomainName = sRefererDomain>
 	
 	<cfreturn Arguments>
 </cffunction>
+
 </cfcomponent>
