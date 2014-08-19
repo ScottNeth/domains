@@ -1,4 +1,4 @@
-<cfcomponent extends="__config.Program" display="Domains" output="false">
+<cfcomponent extends="_config.Program" display="DomainsMgr" output="false">
 
 <cffunction name="config" access="public" returntype="void" output="no">
 	<cfargument name="Config" type="any" required="yes">
@@ -12,14 +12,11 @@
 	<cfset var result = "">
 	
 	<cfsavecontent variable="result">
-	<program name="Domains">
+	<program name="DomainsMgr">
 		<components>
-			<component name="Domains" path="[path_component]model.DomainsMgr">
+			<component name="DomainsMgr" path="[path_component]model.DomainsMgr">
 				<argument name="Manager" component="Manager" />
 			</component>
-			<!---<component name="Domains" path="[path_component]model.Domains">
-				<argument name="Manager" component="Manager" />
-			</component>--->
 		</components>
 	</program>
 	</cfsavecontent>

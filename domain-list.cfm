@@ -3,7 +3,7 @@
 
 <cf_Template showTitle="true">
 
-<cf_sebTable pkfield="DomainNameID" datasource="Neptune">
+<cf_sebTable>
 	<cf_sebColumn dbfield="DomainName" >
 </cf_sebTable>
 

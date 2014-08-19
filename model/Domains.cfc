@@ -1,14 +1,14 @@
 ﻿<cfcomponent extends="com.sebtools.Records">
 
 <cffunction name="xml" access="public" output="yes">
-<tables prefix="domains">
+<tables>
 	<table entity="Domain">
 		<field name="DomainName" Label="Domain" type="text" Length="120" required="true" />
 	</table>
 </tables>
 </cffunction>	
 	
-<cffunction name="convertURL" access="public"  returntype="string" output="no"> 
+<cffunction name="convertURL" access="public" returntype="string" output="no"> 
 	<cfargument name="URL" displayName="URL" type="string" required="true" />
 		
 		<cfset var ret="">

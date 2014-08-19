@@ -1,4 +1,3 @@
-
 <cf_PageController>
 
 <cf_Template showTitle="true">
